@@ -1,0 +1,34 @@
+﻿@using Fluxor
+@using Microsoft.AspNetCore.Components
+@using FluxorPräsentation.Store.Chatroom
+@inject IDispatcher Dispatcher
+@inject IState<FluxorPräsentation.Store.ChatState> ChatState
+
+@page "/chat"
+
+<h3>ChatRoom</h3>
+
+@foreach (var item in ChatState.Value.Chatmessages)
+{
+    <p>@item</p>
+}
+
+<input @bind="input" type="text" />
+<button @onclick="AddMessage">Chat</button>
+
+@code {
+    public List<string> Chatmessages;
+    public string input = "";
+
+    protected override void OnInitialized()
+    {
+        Chatmessages = ChatState.Value.Chatmessages;
+        StateHasChanged();
+    }
+
+    public void AddMessage()
+    {
+        Dispatcher.Dispatch(new AddChatMessage(input, Chatmessages));
+    }
+
+}

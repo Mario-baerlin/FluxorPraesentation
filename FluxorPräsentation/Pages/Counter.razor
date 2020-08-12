@@ -1,0 +1,40 @@
+﻿@using Fluxor
+@using Microsoft.AspNetCore.Components
+@using FluxorPräsentation.Store.CounterUseCase
+@inject IDispatcher Dispatcher
+@inject IState<CounterState> CounterState
+@inject IState<CustomNumberState> CustomNumberState
+
+@page "/counter"
+
+<h1>Counter</h1>
+
+<p>Current count: @CounterState.Value.ClickCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<div>
+    <input @bind="customnumber" type="number" />
+
+    <p>Current count: @CustomNumberState.Value.CustomNumber</p>
+
+    <button class="btn btn-primary" @onclick="setNumber">Set Value to input</button>
+</div>
+@code {
+    public int customnumber = 0;
+
+    protected override void OnInitialized()
+    {
+        customnumber = CustomNumberState.Value.CustomNumber;
+    }
+
+    private void IncrementCount()
+    {
+        Dispatcher.Dispatch(new IncrementCounterAction(CounterState.Value.ClickCount));
+    }
+
+    private void setNumber()
+    {
+        Dispatcher.Dispatch(new SetCustomNumberAction(customnumber));
+    }
+}
